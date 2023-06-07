@@ -1,7 +1,6 @@
 package matt.rstruct
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import matt.collect.itr.subList
 import matt.file.MFile
@@ -29,11 +28,11 @@ fun resourceTxt(name: String): String? {
 
 /*It's a unix style path on all systems*/
 fun resourceURL(name: String): URL? =
-    ClassLoader.getSystemClassLoader().getResource(name.replace("\\", MFile.unixSeperator))
+    ClassLoader.getSystemClassLoader().getResource(name.replace("\\", MFile.unixSeparator))
 
 /*It's a unix style path on all systems*/
 fun resourceStream(name: String): InputStream? =
-    ClassLoader.getSystemClassLoader().getResourceAsStream(name.replace("\\", MFile.unixSeperator))
+    ClassLoader.getSystemClassLoader().getResourceAsStream(name.replace("\\", MFile.unixSeparator))
 
 
 val appNameFileRelativeToResources by lazy { mFile("matt")["appname.txt"] }
