@@ -20,6 +20,13 @@ val modID by lazy {
     )
 }
 
+/*val appName by lazy { resourceTxt(appNameFileRelativeToResources.path) ?: "app_name_blank" }*/
+val extraValues by lazy {
+    Json.decodeFromString<Map<String, String>>(
+        resourceTxt(valuesFileRelativeToResources.path) ?: error("${valuesFileRelativeToResources.path} not found")
+    )
+}
+
 /*Thing()::class.java.classLoader*/
 /*ClassLoader.getPlatformClassLoader()*/
 fun resourceTxt(name: String): String? {
@@ -37,10 +44,13 @@ fun resourceStream(name: String): InputStream? =
 
 val appNameFileRelativeToResources by lazy { mFile("matt")["appname.txt"] }
 val modIDFileRelativeToResources by lazy { mFile("matt")["modID.json"] }
+val valuesFileRelativeToResources by lazy { mFile("matt")["values.json"] }
 val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD) }
 val appNameFileRelativeToSourceSet by lazy { mFile("resources")[appNameFileRelativeToResources] }
 val modIDFileRelativeToSourceSet by lazy { mFile("resources")[modIDFileRelativeToResources] }
 val changelistFileRelativeToSourceSet by lazy { mFile("resources")[changelistFileRelativeToResources] }
+
+val valuesFileRelativeToSourceSet by lazy { mFile("resources")[valuesFileRelativeToResources] }
 
 
 class VersionGetterServiceThingImpl : VersionGetterService {
