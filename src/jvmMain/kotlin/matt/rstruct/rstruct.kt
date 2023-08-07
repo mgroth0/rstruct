@@ -42,6 +42,8 @@ fun resourceStream(name: String): InputStream? =
     ClassLoader.getSystemClassLoader().getResourceAsStream(name.replace("\\", MFile.unixSeparator))
 
 
+fun resourceFile(path: String) = resourceURL(path)?.toURI()?.let { mFile(it) }
+
 val appNameFileRelativeToResources by lazy { mFile("matt")["appname.txt"] }
 val modIDFileRelativeToResources by lazy { mFile("matt")["modID.json"] }
 val valuesFileRelativeToResources by lazy { mFile("matt")["values.json"] }
