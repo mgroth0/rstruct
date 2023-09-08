@@ -9,6 +9,7 @@ import matt.file.construct.mFile
 import matt.log.report.VersionGetterService
 import matt.model.code.mod.RelativeToKMod
 import matt.model.data.release.Version
+import matt.prim.str.elementsToString
 import java.io.InputStream
 import java.net.URL
 
@@ -30,16 +31,40 @@ val extraValues by lazy {
 /*Thing()::class.java.classLoader*/
 /*ClassLoader.getPlatformClassLoader()*/
 fun resourceTxt(name: String): String? {
-    return resourceStream(name)?.bufferedReader()?.readText()
+    return withResourceStream(name) {
+        it?.bufferedReader()?.readText()
+    }
 }
+
+private fun systemClassLoader(): ClassLoader = ClassLoader.getSystemClassLoader()
 
 /*It's a unix style path on all systems*/
 fun resourceURL(name: String): URL? =
-    ClassLoader.getSystemClassLoader().getResource(name.replace("\\", MFile.unixSeparator))
+    resources(name.replace("\\", MFile.unixSeparator)).toList().let {
+
+        if (it.isEmpty()) null
+        else if (it.size == 1) it.single()
+        else {
+            println("there are multiple resources with the name $name: ${it.elementsToString()}") /*because for some reasons the error message below is currently not printing*/
+            error("there are multiple resources with the name $name: ${it.elementsToString()} This will lead to bugs as it becomes ambiguous which one will be selected. Technically it is based on the classpath ordering, but that is something I want my code to be invariant to.")
+        }
+    }
 
 /*It's a unix style path on all systems*/
-fun resourceStream(name: String): InputStream? =
-    ClassLoader.getSystemClassLoader().getResourceAsStream(name.replace("\\", MFile.unixSeparator))
+fun resourceStream(name: String): InputStream? {
+    val checkedSingleURL = resourceURL(name)
+    return checkedSingleURL?.openStream()
+}
+
+fun <R> withResourceStream(
+    name: String,
+    op: (InputStream?) -> R
+) = resourceStream(name).use { s ->
+    op(s)
+}
+
+
+private fun resources(name: String): Sequence<URL> = systemClassLoader().getResources(name).asSequence()
 
 
 fun resourceFile(path: String) = resourceURL(path)?.toURI()?.let { mFile(it) }
