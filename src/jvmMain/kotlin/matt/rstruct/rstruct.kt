@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import matt.collect.itr.subList
 import matt.file.commons.CHANGELIST_MD
 import matt.file.construct.mFile
+import matt.lang.model.file.MacFileSystem
 import matt.log.report.VersionGetterService
 import matt.model.code.mod.RelativeToKMod
 import matt.model.data.release.Version
@@ -29,15 +30,15 @@ val extraValues by lazy {
     )
 }
 
-val appNameFileRelativeToResources by lazy { mFile("matt")["appname.txt"] }
-val modIDFileRelativeToResources by lazy { mFile("matt")["modID.json"] }
-val valuesFileRelativeToResources by lazy { mFile("matt")["values.json"] }
-val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD) }
-val appNameFileRelativeToSourceSet by lazy { mFile("resources")[appNameFileRelativeToResources] }
-val modIDFileRelativeToSourceSet by lazy { mFile("resources")[modIDFileRelativeToResources] }
-val changelistFileRelativeToSourceSet by lazy { mFile("resources")[changelistFileRelativeToResources] }
+val appNameFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["appname.txt"] }
+val modIDFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["modID.json"] }
+val valuesFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["values.json"] }
+val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD, MacFileSystem) }
+val appNameFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[appNameFileRelativeToResources] }
+val modIDFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[modIDFileRelativeToResources] }
+val changelistFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[changelistFileRelativeToResources] }
 
-val valuesFileRelativeToSourceSet by lazy { mFile("resources")[valuesFileRelativeToResources] }
+val valuesFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[valuesFileRelativeToResources] }
 
 
 class VersionGetterServiceThingImpl : VersionGetterService {

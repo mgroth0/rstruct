@@ -1,7 +1,8 @@
 package matt.rstruct.loader
 
-import matt.file.MFile
+import matt.file.JioFile
 import matt.file.construct.mFile
+import matt.file.guessRuntimeFileSystem
 import matt.lang.classpathwork.ClassPathWorker
 import matt.prim.str.elementsToString
 import java.io.InputStream
@@ -43,7 +44,7 @@ class ResourceLoader(vararg classLoaders: ClassLoader) : ClassPathWorker(*classL
 
     /*It's a unix style path on all systems*/
     fun resourceURL(name: String): URL? =
-        resources(name.replace("\\", MFile.unixSeparator)).toList().let {
+        resources(name.replace("\\", JioFile.unixSeparator)).toList().let {
 
 
             if (it.isEmpty()) null
@@ -54,7 +55,7 @@ class ResourceLoader(vararg classLoaders: ClassLoader) : ClassPathWorker(*classL
             }
         }
 
-    fun resourceFile(path: String) = resourceURL(path)?.toURI()?.let { mFile(it) }
+    fun resourceFile(path: String) = resourceURL(path)?.toURI()?.let { mFile(it.path, guessRuntimeFileSystem) }
 
 
 }
