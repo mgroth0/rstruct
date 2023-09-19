@@ -5,7 +5,10 @@ import kotlinx.serialization.json.Json
 import matt.collect.itr.subList
 import matt.file.commons.CHANGELIST_MD
 import matt.file.construct.mFile
+import matt.lang.anno.SeeURL
+import matt.lang.model.file.CaseSensitivity.CaseSensitive
 import matt.lang.model.file.MacFileSystem
+import matt.lang.model.file.UnixFileSystem
 import matt.log.report.VersionGetterService
 import matt.model.code.mod.RelativeToKMod
 import matt.model.data.release.Version
@@ -30,15 +33,27 @@ val extraValues by lazy {
     )
 }
 
-val appNameFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["appname.txt"] }
-val modIDFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["modID.json"] }
-val valuesFileRelativeToResources by lazy { mFile("matt", MacFileSystem)["values.json"] }
-val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD, MacFileSystem) }
-val appNameFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[appNameFileRelativeToResources] }
-val modIDFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[modIDFileRelativeToResources] }
-val changelistFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[changelistFileRelativeToResources] }
 
-val valuesFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[valuesFileRelativeToResources] }
+@SeeURL("https://www.eclipse.org/forums/index.php/t/71872/")
+object ResourceFileSystem : UnixFileSystem() {
+    override val caseSensitivity = CaseSensitive
+}
+
+val appNameFileRelativeToResources by lazy { mFile("matt", ResourceFileSystem)["appname.txt"] }
+val modIDFileRelativeToResources by lazy { mFile("matt", ResourceFileSystem)["modID.json"] }
+val valuesFileRelativeToResources by lazy { mFile("matt", ResourceFileSystem)["values.json"] }
+
+val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD, MacFileSystem) }
+val appNameFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[appNameFileRelativeToResources.path] }
+val modIDFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[modIDFileRelativeToResources.path] }
+val changelistFileRelativeToSourceSet by lazy {
+    mFile(
+        "resources",
+        MacFileSystem
+    )[changelistFileRelativeToResources.path]
+}
+
+val valuesFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[valuesFileRelativeToResources.path] }
 
 
 class VersionGetterServiceThingImpl : VersionGetterService {
