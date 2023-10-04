@@ -35,7 +35,7 @@ val extraValues by lazy {
 
 
 @SeeURL("https://www.eclipse.org/forums/index.php/t/71872/")
-object ResourceFileSystem : UnixFileSystem() {
+data object ResourceFileSystem : UnixFileSystem() {
     override val caseSensitivity = CaseSensitive
 }
 
