@@ -1,5 +1,6 @@
 package matt.rstruct.loader
 
+import matt.collect.props.Properties
 import matt.file.JioFile
 import matt.file.construct.mFile
 import matt.file.guessRuntimeFileSystem
@@ -33,6 +34,8 @@ class ResourceLoader(vararg classLoaders: ClassLoader) : ClassPathWorker(*classL
             it?.bufferedReader()?.readText()
         }
     }
+
+    fun readResourceAsProperties(name: String) = Properties(resourceStream(name)!!)
 
 
     fun <R> withResourceStream(
