@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import matt.collect.itr.subList
 import matt.file.commons.CHANGELIST_MD
+import matt.file.commons.LOG_FOLDER
 import matt.file.construct.mFile
+import matt.file.ext.mkparents
 import matt.lang.anno.SeeURL
 import matt.lang.model.file.CaseSensitivity.CaseSensitive
 import matt.lang.model.file.MacFileSystem
@@ -14,6 +16,13 @@ import matt.model.code.mod.RelativeToKMod
 import matt.model.data.release.Version
 import matt.rstruct.loader.systemResourceLoader
 
+/*TODO: DANGEROUS. I DON'T LIKE THIS MOD_ID STUFF.*/
+val MOD_ID_LOG_FILE by lazy {
+    LOG_FOLDER[modID.appName]["std_out_and_err.log"].also {
+        it.mkparents()
+        it.deleteIfExists()
+    }
+}
 
 //@Deprecated("It is unclear how this will work in plugin classloaders")
 /*val appName by lazy { resourceTxt(appNameFileRelativeToResources.path) ?: "app_name_blank" }*/
@@ -32,8 +41,6 @@ val extraValues by lazy {
             ?: error("${valuesFileRelativeToResources.path} not found")
     )
 }
-
-
 
 
 @SeeURL("https://www.eclipse.org/forums/index.php/t/71872/")
