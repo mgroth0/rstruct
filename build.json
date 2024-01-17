@@ -1,17 +1,20 @@
 {
-    "type": "MultiPlatformModule",
-    "dependencies": [
-        {
-            "type": "Project",
-            "cfg": "jvmMainApi",
-            "path": ":k:file"
-        },
-        {
-            "type": "Project",
-            "cfg": "jvmTestImplementation",
-            "path": ":k:test"
-        }
-    ],
-    "jvm": {
+  "type": "MultiPlatformModule",
+  "dependencies": [
+    {
+      "type": "Project",
+      "cfg": "commonMainApi",
+      "path": ":k:file"
+    },
+    {
+      "type": "Project",
+      "cfg": "jvmTestImplementation",
+      "path": ":k:test"
     }
+  ],
+  "jvm": {
+  },
+  "android": {
+    "type": "Lib"
+  }
 }

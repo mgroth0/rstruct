@@ -2,7 +2,8 @@ package matt.rstruct.jni
 
 import matt.model.code.mod.RelativeToKMod
 import matt.model.code.mod.sharedLibBaseName
-import matt.rstruct.loader.ResourceLoader
+import matt.rstruct.loader.ClassicResourceLoader
+import matt.rstruct.loader.withResourceStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
@@ -22,7 +23,7 @@ private val loadedLibraries = mutableSetOf<String>()
  */
 @Synchronized
 fun loadSharedLibraryResource(
-    resourceLoader: ResourceLoader,
+    resourceLoader: ClassicResourceLoader,
     mod: RelativeToKMod
 ) {
 
