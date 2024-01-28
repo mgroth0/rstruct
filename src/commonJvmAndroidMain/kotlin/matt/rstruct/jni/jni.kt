@@ -11,8 +11,8 @@ import kotlin.io.path.pathString
 
 
 const val NATIVE_RESOURCE_FOLDER_NAME = "native"
-fun RelativeToKMod.sharedLibName() = "lib${sharedLibBaseName}.dylib"
-/*fun sharedLibResource(mod: RelativeToKMod) = systemResourceLoader().readResourceAsText()*/
+fun RelativeToKMod.sharedLibName() =
+    "lib${sharedLibBaseName}.dylib"/*fun sharedLibResource(mod: RelativeToKMod) = systemResourceLoader().readResourceAsText()*/
 
 private val loadedLibraries = mutableSetOf<String>()
 
@@ -28,9 +28,6 @@ fun loadSharedLibraryResource(
 ) {
 
     val libName = mod.sharedLibName()
-
-
-
     if (libName in loadedLibraries) return
 
     val tempDir = Files.createTempDirectory("tempSharedLibFor_$libName")
