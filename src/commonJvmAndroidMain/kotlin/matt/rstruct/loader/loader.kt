@@ -29,10 +29,8 @@ fun ResourceLoader.readResourceAsProperties(name: String) = Properties(resourceS
 
 /*Thing()::class.java.classLoader*/
 /*ClassLoader.getPlatformClassLoader()*/
-fun ResourceLoader.readResourceAsText(name: String): String? {
-    return withResourceStream(name) {
-        it?.bufferedReader()?.readText()
-    }
+fun ResourceLoader.readResourceAsText(name: String): String? = withResourceStream(name) {
+    it?.bufferedReader()?.readText()
 }
 
 

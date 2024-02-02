@@ -73,9 +73,7 @@ class VersionGetterServiceThingImpl(resourceLoader: ResourceLoader) : VersionGet
         resourceLoader.modId().version
     }
 
-    override fun getTheVersion(): String {
-        return version.toString()
-    }
+    override fun getTheVersion(): String = version.toString()
 }
 
 @Serializable

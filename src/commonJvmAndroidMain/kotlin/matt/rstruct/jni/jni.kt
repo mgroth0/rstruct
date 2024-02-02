@@ -12,7 +12,7 @@ import kotlin.io.path.pathString
 
 const val NATIVE_RESOURCE_FOLDER_NAME = "native"
 fun RelativeToKMod.sharedLibName() =
-    "lib${sharedLibBaseName}.dylib"/*fun sharedLibResource(mod: RelativeToKMod) = systemResourceLoader().readResourceAsText()*/
+    "lib$sharedLibBaseName.dylib"/*fun sharedLibResource(mod: RelativeToKMod) = systemResourceLoader().readResourceAsText()*/
 
 private val loadedLibraries = mutableSetOf<String>()
 
