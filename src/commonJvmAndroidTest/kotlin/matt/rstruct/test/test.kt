@@ -10,10 +10,11 @@ import kotlin.test.Test
 
 class RstructTests {
     @Test
-    fun initValues() = assertRunsInOneMinute {
-        appNameFileRelativeToSourceSet
-        modIDFileRelativeToSourceSet
-        changelistFileRelativeToSourceSet
-        valuesFileRelativeToSourceSet
-    }
+    fun initValues() =
+        assertRunsInOneMinute {
+            appNameFileRelativeToSourceSet
+            modIDFileRelativeToSourceSet
+            changelistFileRelativeToSourceSet
+            valuesFileRelativeToSourceSet
+        }
 }

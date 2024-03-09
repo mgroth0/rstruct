@@ -1,11 +1,10 @@
-@file:JvmName("LoaderJvmAndroidKt")
 
 package matt.rstruct.loader
 
 import matt.collect.props.Properties
 import matt.file.JioFile
 import matt.file.construct.mFile
-import matt.lang.classpathwork.ClassPathWorker
+import matt.lang.classpathwork.j.ClassPathWorker
 import matt.model.code.sys.LinuxFileSystem
 import matt.prim.str.elementsToString
 import java.io.InputStream
@@ -27,20 +26,24 @@ fun <R> ResourceLoader.withResourceStream(
 fun ResourceLoader.readResourceAsProperties(name: String) = Properties(resourceStream(name)!!)
 
 
-/*Thing()::class.java.classLoader*/
-/*ClassLoader.getPlatformClassLoader()*/
-fun ResourceLoader.readResourceAsText(name: String): String? = withResourceStream(name) {
-    it?.bufferedReader()?.readText()
-}
+/*Thing()::class.java.classLoader
+
+
+ClassLoader.getPlatformClassLoader()*/
+fun ResourceLoader.readResourceAsText(name: String): String? =
+    withResourceStream(name) {
+        it?.bufferedReader()?.readText()
+    }
 
 
 class ClassicResourceLoader(vararg classLoaders: ClassLoader) : ClassPathWorker(*classLoaders), ResourceLoader {
 
-    private fun resources(name: String): Sequence<URL> = sequence {
-        classLoaders.forEach {
-            yieldAll(it.getResources(name).asSequence())
+    private fun resources(name: String): Sequence<URL> =
+        sequence {
+            classLoaders.forEach {
+                yieldAll(it.getResources(name).asSequence())
+            }
         }
-    }
 
     /*It's a unix style path on all systems*/
     override fun resourceStream(name: String): InputStream? {
@@ -62,12 +65,11 @@ class ClassicResourceLoader(vararg classLoaders: ClassLoader) : ClassPathWorker(
             }
         }
 
-    fun resourceFile(path: String) = resourceURL(path)?.toURI()?.let {
-        mFile(
-            it.path,
-            LinuxFileSystem /*jar resources are always case-sensitive, even if a host that is case-insensitive*/
-        )
-    }
-
-
+    fun resourceFile(path: String) =
+        resourceURL(path)?.toURI()?.let {
+            mFile(
+                it.path,
+                LinuxFileSystem /*jar resources are always case-sensitive, even if a host that is case-insensitive*/
+            )
+        }
 }

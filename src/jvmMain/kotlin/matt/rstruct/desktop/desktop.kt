@@ -1,6 +1,9 @@
-package matt.rstruct
+package matt.rstruct.desktop
 
-import matt.rstruct.loader.systemResourceLoader
+import matt.rstruct.appName
+import matt.rstruct.loader.desktop.systemResourceLoader
+import matt.rstruct.modId
+import matt.rstruct.unsafeExtraValues
 
 
 val modId by lazy {

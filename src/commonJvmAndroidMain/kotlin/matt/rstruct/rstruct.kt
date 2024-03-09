@@ -1,16 +1,14 @@
-@file:JvmName("RstructJvmAndroidKt")
 
 package matt.rstruct
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import matt.collect.itr.subList
-import matt.file.commons.CHANGELIST_MD
-import matt.file.construct.mFile
-import matt.file.ext.mkparents
+import matt.file.commons.fnames.FileNames.CHANGELIST_MD
+import matt.file.construct.common.mFile
 import matt.lang.anno.SeeURL
 import matt.lang.model.file.CaseSensitivity.CaseSensitive
-import matt.lang.model.file.MacFileSystem
+import matt.lang.model.file.MacDefaultFileSystem
 import matt.lang.model.file.UnixFileSystem
 import matt.log.report.VersionGetterService
 import matt.model.code.mod.RelativeToKMod
@@ -18,25 +16,21 @@ import matt.model.data.release.Version
 import matt.rstruct.loader.ResourceLoader
 import matt.rstruct.loader.readResourceAsText
 
+internal fun ResourceLoader.modId() =
+    run {
+        Json.decodeFromString<ModId>(
+            readResourceAsText(modIdFileRelativeToResources.path)
+                ?: error("${modIdFileRelativeToResources.path} not found")
+        )
+    }
 
-fun matt.file.commons.LogContext.standardOutAndErrLogFile() = logFolder["std_out_and_err.log"].also {
-    it.mkparents()
-    it.deleteIfExists()
-}
-
-internal fun ResourceLoader.modId() = run {
-    Json.decodeFromString<ModId>(
-        readResourceAsText(modIdFileRelativeToResources.path)
-            ?: error("${modIdFileRelativeToResources.path} not found")
-    )
-}
-
-fun ResourceLoader.unsafeExtraValues() = run {
-    Json.decodeFromString<Map<String, String>>(
-        readResourceAsText(valuesFileRelativeToResources.path)
-            ?: error("${valuesFileRelativeToResources.path} not found")
-    )
-}
+fun ResourceLoader.unsafeExtraValues() =
+    run {
+        Json.decodeFromString<Map<String, String>>(
+            readResourceAsText(valuesFileRelativeToResources.path)
+                ?: error("${valuesFileRelativeToResources.path} not found")
+        )
+    }
 
 
 @SeeURL("https://www.eclipse.org/forums/index.php/t/71872/")
@@ -50,22 +44,24 @@ const val ASSETS_FOLDER_NAME = "assets"
 val assetsFolderRelativeToResources by lazy { mFile(ASSETS_FOLDER_NAME, ResourceFileSystem) }
 
 val appNameFileRelativeToResources by lazy { mFile("matt", ResourceFileSystem)["appname.txt"] }
-val modIdFileRelativeToResources by lazy { mFile("matt", ResourceFileSystem)["modID.json"] }
+val modIdFileRelativeToResources by lazy {
+    mFile("matt", ResourceFileSystem)["mod-id.json"] /*changed modID to mod-id to avoid casing issues... resources are case sensitive even on mac*/
+}
 val valuesFileRelativeToResources by lazy { assetsFolderRelativeToResources["matt"]["values.json"] }
 
-val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD, MacFileSystem) }
-val appNameFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[appNameFileRelativeToResources.path] }
-val modIDFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[modIdFileRelativeToResources.path] }
+val changelistFileRelativeToResources by lazy { mFile(CHANGELIST_MD, MacDefaultFileSystem) }
+val appNameFileRelativeToSourceSet by lazy { mFile("resources", MacDefaultFileSystem)[appNameFileRelativeToResources.path] }
+val modIDFileRelativeToSourceSet by lazy { mFile("resources", MacDefaultFileSystem)[modIdFileRelativeToResources.path] }
 
 
 val changelistFileRelativeToSourceSet by lazy {
     mFile(
         "resources",
-        MacFileSystem
+        MacDefaultFileSystem
     )[changelistFileRelativeToResources.path]
 }
 
-val valuesFileRelativeToSourceSet by lazy { mFile("resources", MacFileSystem)[valuesFileRelativeToResources.path] }
+val valuesFileRelativeToSourceSet by lazy { mFile("resources", MacDefaultFileSystem)[valuesFileRelativeToResources.path] }
 
 
 class VersionGetterServiceThingImpl(resourceLoader: ResourceLoader) : VersionGetterService {
@@ -85,6 +81,7 @@ class ModId(
     override val relToKNames: List<String> get() = gradlePath.split(":").filter { it.isNotBlank() }.subList(1)
 }
 
-internal fun ResourceLoader.appName() = run {
-    modId().appName
-}
+internal fun ResourceLoader.appName() =
+    run {
+        modId().appName
+    }

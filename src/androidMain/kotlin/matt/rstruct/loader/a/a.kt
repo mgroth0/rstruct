@@ -1,8 +1,9 @@
-package matt.rstruct.loader
+package matt.rstruct.loader.a
 
 import android.content.res.AssetManager
+import matt.lang.fnf.runCatchingFileTrulyNotFound
 import matt.rstruct.ASSETS_FOLDER_NAME
-import java.io.FileNotFoundException
+import matt.rstruct.loader.ResourceLoader
 import java.io.InputStream
 
 
@@ -12,10 +13,11 @@ class AssetResourceLoader(
     override fun resourceStream(name: String): InputStream? {
         val prefix = "$ASSETS_FOLDER_NAME/"
         check(name.startsWith(prefix))
-        try {
-            return assetManager.open(name.removePrefix(prefix))
-        } catch (e: FileNotFoundException) {
-            return null
-        }
+
+        return  runCatchingFileTrulyNotFound(
+            file  = { error("asset file...") }
+        ) {
+            assetManager.open(name.removePrefix(prefix))
+        }.getOrNull()
     }
 }
